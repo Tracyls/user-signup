@@ -104,6 +104,7 @@ def validate_user_info():
 
 @app.route('/welcome', methods=['GET'])
 def display_welcome():
-   return render_template('welcome.html', username=username)
+    username=request.args.get('username')
+    return render_template('welcome.html', username=username)
 
 app.run()
