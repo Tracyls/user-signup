@@ -18,14 +18,12 @@ def is_valid_email(address):
     if at_count != 1:
         return False
 
-    period = "."
-    period_count = address.count(period)
-    if period_count != 1:
+
+    if "." not in address:
         return False
 
-    space = " "
-    space_count = address.count(space)
-    if space_count != 0:
+
+    if " " in address:
         return False
 
     else:
