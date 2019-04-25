@@ -1,27 +1,51 @@
 from flask import Flask, request, redirect, render_template
-import re
+
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
 @app.route('/')
-def display_signup():
+
+def index():
     return render_template('main.html')
 
-@app.route('/error', methods=['POST', 'GET'])
+def is_valid_email(address):
+    if len(address) < 3 or len(address) > 20:
+        return False
+
+    at = "@"
+    at_count = address.count(at)
+    if at_count != 1:
+        return False
+
+    period = "."
+    period_count = address.count(period)
+    if period_count != 1:
+        return False
+
+    space = " "
+    space_count = address.count(space)
+    if space_count != 0:
+        return False
+
+    else:
+        return True
+
+    
+
+@app.route('/main', methods=['POST', 'GET'])
+
 def validate_user_info():
-
-
     username=request.form['username']
     username_error= ""
     
     if username == "":
         username_error="Please enter username"
 
-    elif " " in username:
+    if " " in username:
         username_error="Username cannot contain spaces"
     
-    elif len(username) < 3 or len(username) > 20:
+    if len(username) < 3 or len(username) > 20:
         username_error="Username must containg beween 3 and 20 characters"
      
 
@@ -31,10 +55,10 @@ def validate_user_info():
     if password == "":
         password_error="Please enter password"
     
-    elif " " in password:
+    if " " in password:
         password_error="Password cannot contain spaces"
 
-    elif len(password)<3 and len(password)>20:
+    if len(password)<3 and len(password)>20:
         password_error="Password must be between 3 and 20 characters"
       
 
@@ -42,26 +66,27 @@ def validate_user_info():
     password=request.form['password']
     verify=request.form['verify']
     verify_error=""
-    if password=="":
+    if verify=="":
         verify_error="Please verify password"
+    
+    if " " in verify:
+        verify_error="Cannot contain spaces"
 
-    elif verify not in password:
+    if verify not in password:
         verify_error="Passwords do not match"
  
 
-    email_error=""
     email=request.form['email']
-    valid_email=re.compile("[a-zA-Z0-9_]+\.?[a-zA-Z0-9_]+@[a-z]+")
-    
-    if valid_email.match(email):
-        return True
-    else:
-        email_error="Please enter valid email or leave blank"
-       
+    email_error=""
+    if len(email) != 0:
+        if is_valid_email(email) == False:
+            email_error = "Please enter a valid email or leave blank"
+            
 
 
     if not username_error and not password_error and not verify_error and not email_error:
-        return redirect('/welcome?username={0}'.format(username)) 
+        return redirect('/welcome?username={0}'.format(username))
+        
     else:
         return render_template('main.html',
             username=username,
@@ -77,10 +102,8 @@ def validate_user_info():
 
 
 
-@app.route('/welcome')
+@app.route('/welcome', methods=['GET'])
 def display_welcome():
-    username=request.args.get('username')
-    return render_template('welcome.html', username=username) 
-
+   return render_template('welcome.html', username=username)
 
 app.run()

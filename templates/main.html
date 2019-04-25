@@ -2,11 +2,10 @@
 {% block content %}
 
 <h1>Signup</h1>
-        <form action='/' method="POST">
-            <label for="username">Username
-              <input name="username" type="text" value='{{username}}'/>
-            </label>
-              <span class="error">{{username_error}}</span>
+        <form action='/main' method="POST">
+            <label for="username">Username</label>
+            <input name="username" type="text" value='{{username}}'/>
+            <span class="error">{{username_error}}</span>
             <br>
             </br>        
             <label for="password">Password</label>
@@ -20,7 +19,7 @@
             <br>
             </br>        
             <label for="email">Email (optional)</label>
-            <input name="email" value=""/>
+            <input name="email" value="{{email}}"/>
             <span class="error">{{email_error}}</span>
             <br>        
             </br>
